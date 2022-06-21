@@ -1,44 +1,60 @@
 package com.conlage.emotracker.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorPalette = darkColors(
-   primary = Purple200,
-   primaryVariant = Purple700,
-   secondary = Teal200
-)
+internal val LocalEmoTrackerColors = staticCompositionLocalOf<Colors> { error("no default colors") }
+internal val LocalEmoTrackerTypography =
+   staticCompositionLocalOf<Typography> { error("no default colors") }
 
-private val LightColorPalette = lightColors(
-   primary = Purple500,
-   primaryVariant = Purple700,
-   secondary = Teal200
+object RippleTheme : RippleTheme {
+   @Composable
+   override fun defaultColor() =
+      RippleTheme.defaultRippleColor(
+         Color(0x8F281542),
+         lightTheme = true
+      )
 
-   /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
-)
+   @Composable
+   override fun rippleAlpha(): RippleAlpha =
+      RippleTheme.defaultRippleAlpha(
+         Color(0x8F281542),
+         lightTheme = true
+      )
+}
+
+object AppTheme {
+   val colors: Colors
+      @Composable
+      @ReadOnlyComposable
+      get() = LocalEmoTrackerColors.current
+
+   val typography: Typography
+      @Composable
+      @ReadOnlyComposable
+      get() = LocalEmoTrackerTypography.current
+}
 
 @Composable
-fun EmoTrackerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-   val colors = if (darkTheme) {
-      DarkColorPalette
-   } else {
-      LightColorPalette
+fun EmoTrackerTheme(content: @Composable () -> Unit) {
+   MaterialTheme() {
+      CompositionLocalProvider(
+         values = arrayOf(
+            LocalEmoTrackerColors provides colorPalette,
+            LocalEmoTrackerTypography provides typography,
+            LocalRippleTheme provides com.conlage.emotracker.theme.RippleTheme,
+            LocalTextStyle provides typography.partition
+         ),
+         content = content
+      )
    }
 
-   MaterialTheme(
-      colors = colors,
-      typography = Typography,
-      shapes = Shapes,
-      content = content
-   )
 }

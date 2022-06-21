@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">EmoTracker</string>
+
+    <!-- Error-->
+    <string name="unknown_error_message">Произошла неизвестная ошибка, мы уже занимаемся её устранением</string>
+    <string name="internet_connection_error_message">Нам не удалось подключиться к серверу, пожалуйста, проверьте соединение с интернетом</string>
+
 </resources>
